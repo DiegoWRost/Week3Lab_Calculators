@@ -27,6 +27,7 @@ public class AgeCalculatorServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         String age = request.getParameter("enterAge");
 
         request.setAttribute("enterAge", age);
