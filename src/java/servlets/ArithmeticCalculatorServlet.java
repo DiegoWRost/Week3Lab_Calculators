@@ -31,48 +31,36 @@ public class ArithmeticCalculatorServlet extends HttpServlet {
         String first = request.getParameter("firstNumber");
         String second = request.getParameter("secondNumber");
         String submit = request.getParameter("submit");
+        String url = "/WEB-INF/arithmeticcalculator.jsp";
         
         request.setAttribute("firstNumber", first);
         request.setAttribute("secondNumber", second);
-        
-        if (first == null || first.equals("") || second == null || second.equals("")) {
-            request.setAttribute("message", "invalid");
-            getServletContext().getRequestDispatcher("/WEB-INF/arithmeticcalculator.jsp")
-                .forward(request, response);
-            return;
-        }
-        
-        for (int i = 0; i < first.length(); i++) {
-            char c = first.charAt(i);
-            if (c < '0' || c > '9') {
-                request.setAttribute("message", "invalid");
-                getServletContext().getRequestDispatcher("/WEB-INF/arithmeticcalculator.jsp")
-                    .forward(request, response);
-                return;    
-            }
-        }
-        
-        for (int i = 0; i < second.length(); i++) {
-            char c = second.charAt(i);
-            if (c < '0' || c > '9') {
-                request.setAttribute("message", "invalid");
-                getServletContext().getRequestDispatcher("/WEB-INF/arithmeticcalculator.jsp")
-                    .forward(request, response);
-                return;    
-            }
-        }
-        
-        if (submit.equals("+")) {
-            request.setAttribute("message", Integer.parseInt(first) + Integer.parseInt(second));
-        } else if (submit.equals("-")) {
-            request.setAttribute("message", Integer.parseInt(first) - Integer.parseInt(second));
-        } else if (submit.equals("*")) {
-            request.setAttribute("message", Integer.parseInt(first) * Integer.parseInt(second));
-        } else {
-            request.setAttribute("message", Integer.parseInt(first) % Integer.parseInt(second));
-        }
 
-        getServletContext().getRequestDispatcher("/WEB-INF/arithmeticcalculator.jsp")
-                .forward(request, response);
+        if (first == null || first.isEmpty() || second == null || second.isEmpty()) {
+            request.setAttribute("message", "invalid");
+        } else {
+            try {
+                int firstInt = Integer.parseInt(first);
+                int secondInt = Integer.parseInt(second);
+
+                switch (submit) {
+                    case "+":
+                        request.setAttribute("message", firstInt + secondInt);
+                        break;
+                    case "-":
+                        request.setAttribute("message", firstInt - secondInt);
+                        break;
+                    case "*":
+                        request.setAttribute("message", firstInt * secondInt);
+                        break;
+                    case "%":
+                        request.setAttribute("message", firstInt % secondInt);
+                        break;
+                }
+            } catch (NumberFormatException e) {
+                request.setAttribute("message", "invalid");
+            } 
+        }
+        getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 }

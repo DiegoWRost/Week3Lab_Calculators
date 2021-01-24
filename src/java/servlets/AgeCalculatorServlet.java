@@ -29,29 +29,19 @@ public class AgeCalculatorServlet extends HttpServlet {
             throws ServletException, IOException {
         
         String age = request.getParameter("enterAge");
+        String url = "/WEB-INF/agecalculator.jsp";
 
         request.setAttribute("enterAge", age);
         
-        if (age == null || age.equals("")) {
+        if (age == null || age.isEmpty()) {
             request.setAttribute("message", "You must give your current age");
-            getServletContext().getRequestDispatcher("/WEB-INF/agecalculator.jsp")
-                .forward(request, response);
-            return;
-        }
-        
-        for (int i = 0; i < age.length(); i++) {
-            char c = age.charAt(i);
-            if (c < '0' || c > '9') {
-                request.setAttribute("message", "You must enter a valid number");
-                getServletContext().getRequestDispatcher("/WEB-INF/agecalculator.jsp")
-                    .forward(request, response);
-                return;    
+        } else {
+            try {
+                request.setAttribute("message", "Your age next birthday will be " + (Integer.parseInt(age) + 1));
+            } catch (NumberFormatException e) {
+                request.setAttribute("message", "You must enter a valid number");  
             }
         }
-        
-        request.setAttribute("message", "Your age next birthday will be " + (Integer.parseInt(age) + 1));
-        
-        getServletContext().getRequestDispatcher("/WEB-INF/agecalculator.jsp")
-                .forward(request, response);
+        getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 }
